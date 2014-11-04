@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>Performance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <article>
+        <h1>Performance</h1>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+        <div class="row">
+            <p class="alert alert-warning col-sm-7">
+                <strong>Note: </strong> Since there are so many objects loaded into this store make sure you give the
+                browser a sufficient amount of time to seed the store the first time you run this demo. It's possible
+                the database could take perhaps 30 seconds or so to open the database once data is in the store.
+            </p>
+        </div class="row">
+        <div class="control-row row">
+            <div class="col-sm-4">
+                <input type="text" id="input-box" placeholder="last name, age, age range, etc." class="form-control" />
+            </div>
+            <div class="col-sm-6">
+                <button type="button" id="create-button" class="btn btn-default btn-link fa fa-certificate" title="Create Database"></button>
+                <button type="button" id="delete-button" class="btn btn-default btn-link fa fa-warning" title="Delete Database"></button>
+            </div>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+    <script>
+        var db = {
+            name: 'PerformanceDB',
+            version: 1,
+            instance: {},
+            stores: {
+                people: {
+                    name: 'people',
+                    indexes: {
+                        lastName: {
+                            name: 'lastName',
+                            definition: { unique: false }
+                        },
+                        age: {
+                            name: 'age',
+                            definition: { unique: false }
+                        }
+                    },
+                }
+            },
+            defaultErrorHandler: function (e) {
+                $$result.log(e);
+            },
+            setDefaultErrorHandler: function (request) {
+
+                if ('onerror' in request) {
+                    request.onerror = db.defaultErrorHandler;
+                }
+
+                if ('onblocked' in request) {
+                    request.onblocked = db.defaultErrorHandler;
+                }
+
+                if ('onabort' in request) {
+                    request.onabort = db.defaultErrorHandler;
+                }
+
+            }
+        };
+    </script>
+
+        <script data-step="1" data-label="Range (numeric)">
+            var step1 = function () {
+                //---
+                var
+                    parts = $('#input-box').val().split('-'),
+                    startAge = 0,
+                    endAge = 0;
+
+                startAge = Number(parts[0]);
+
+                if (isNaN(startAge)) {
+                    $$result.log('You must enter a numeric value.');
+                    return;
+                }
+
+                if (startAge < 18) {
+                    $$result.log('You need to enter an age or range starting at 18 or older.')
+                    return;
+                }
+
+                if (parts.length > 1) {
+                    endAge = Number(parts[1]);
+                }
+
+                if (endAge > 0 && (startAge > endAge)) {
+                    $$result.log('The start age must be less than or equal to the end age.');
+                    return;
+                }
+
+                var done = function (data) {
+
+                    $$result.log('There are ' + data.length + ' objects returned as the result of your query.');
+
+
+                    $$result.logBold('Here are the first 5:');
+
+                    for (var i = 0; i < 5; i++) {
+                        $$result.log('Name: ' + data[i].firstName + ' ' + data[i].lastName + ', Age: ' + data[i].age);
+                    }
+
+                    $$result.logBold('Here are the last 5:');
+                    for (var i = data.length - 5; i < data.length; i++) {
+                        $$result.log('Name: ' + data[i].firstName + ' ' + data[i].lastName + ', Age: ' + data[i].age);
+                    }
+                };
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    store = transaction.objectStore('people'),
+                    index = store.index('age'),
+                    range;
+
+                if (endAge > 0) {
+
+                    range = IDBKeyRange.bound(startAge, endAge);
+
+                } else {
+
+                    range = IDBKeyRange.upperBound(startAge);
+
+                }
+
+                $$result.log('Starting query....');
+
+                var
+                    data = [];
+                    countRequest = index.count(range);
+
+                db.setDefaultErrorHandler(countRequest);
+
+                countRequest.onsuccess = function (countRequestEventArgs) {
+
+                    var
+                        totalCount = countRequestEventArgs.target.result,
+                        cursorRequest = index.openCursor(range);
+
+                    db.setDefaultErrorHandler(cursorRequest);
+
+                    cursorRequest.onsuccess = function (e) {
+
+                        var
+                            person = {},
+                            result = e.target.result;
+
+                        if (result !== null) {
+
+                            person = result.value;
+
+                            data.push(person);
+
+                            if (data.length === totalCount) {
+
+                                done(data);
+
+                            } else {
+
+                                result.continue();
+
+                            }
+                        }
+
+                    };
+                }
+                //---
+            }
+        </script>
+        <script data-step="2" data-label="Range (string)">
+            var step2 = function () {
+                //---
+                var lastName = $('#input-box').val();
+
+                if (lastName.length === 0) {
+                    $$result.log('You need to enter a last name.')
+                    return;
+                }
+
+                var done = function (data) {
+
+                    $$result.log('There are ' + data.length + ' objects returned as the result of your query.');
+
+
+                    $$result.logBold('Here are the first 10:');
+
+                    for (var i = 0; i < 10; i++) {
+                        $$result.log('Name: ' + data[i].firstName + ' ' + data[i].lastName + ', Age: ' + data[i].age);
+                    }
+                };
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    store = transaction.objectStore('people'),
+                    index = store.index('lastName'),
+                    range;
+
+                range = IDBKeyRange.only(lastName);
+
+                $$result.log('Starting query....');
+
+                var
+                    data = [],
+                    countRequest = index.count(range);
+
+                db.setDefaultErrorHandler(countRequest);
+
+                countRequest.onsuccess = function (countRequestEventArgs) {
+
+                    var
+                        totalCount = countRequestEventArgs.target.result,
+                        cursorRequest = index.openCursor(range);
+
+                    db.setDefaultErrorHandler(cursorRequest);
+
+                    cursorRequest.onsuccess = function (cursorRequestEventArgs) {
+
+                        var
+                            person = {},
+                            result = cursorRequestEventArgs.target.result;
+
+                        if (result !== null) {
+
+                            person = result.value;
+
+                            data.push(person);
+
+                            if (data.length === totalCount) {
+
+                                done(data);
+
+                            } else {
+
+                                result.continue();
+
+                            }
+                        }
+
+                    };
+
+                };
+                //---
+            }
+        </script>
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1,
+            step2: step2
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            } else {
+
+                var transactionTypes = {
+                    readwrite: 'readwrite',
+                    readonly: 'readonly'
+                };
+
+                var counter = 0;
+
+                var notify = function (length) {
+                    counter++;
+                    if (counter == length) {
+                        $$result.log(length + ' people objects are now added to the <code>people</code> store.');
+                        $$result.log('<span class="text-danger">Make sure to wait for the open notification (after this line) to appear before you proceed.</span>');
+                    }
+                };
+
+                var getObjectStore = function (storeName, transactionType) {
+
+                    if (!transactionType) {
+                        transactionType = transactionTypes.readonly;
+                    }
+
+                    var txn = db.instance.transaction([storeName], transactionType);
+                    return store = txn.objectStore(storeName);
+                };
+
+                $('#delete-button').click(function () {
+
+                    if (db.instance !== null) {
+
+                        db.instance.close();
+
+                        $$result.log('Attempting to delete the database...');
+
+                        var delRequest = indexedDB.deleteDatabase(db.name);
+
+                        db.setDefaultErrorHandler(delRequest);
+
+                        delRequest.onsuccess = function () {
+
+                            db.instance = null;
+
+                            $$result.log('Database deleted');
+
+                        };
+
+                    } else {
+
+                        $$result.log('You must first create a database before attempting a delete. Refresh the page to create the database again.');
+
+                    }
+
+                });
+
+                $('#create-button').click(function () {
+                    openDatabase();
+                });
+
+                var openDatabase = function () {
+                    var request = indexedDB.open(db.name, db.version);
+
+                    request.onupgradeneeded = function (e) {
+
+                        var newVersion = e.target.result;
+
+                        if (!newVersion.objectStoreNames.contains(db.stores.people.name)) {
+
+                            $$result.log('Creating <code>' + db.stores.people.name + '</code> store');
+
+                            var store = newVersion.createObjectStore(
+                                db.stores.people.name,
+                                {
+                                    autoIncrement: true
+                                });
+
+                            var index = db.stores.people.indexes.lastName;
+                            store.createIndex(index.name, index.name, index.definition);
+
+                            index = db.stores.people.indexes.age;
+                            store.createIndex(index.name, index.name, index.definition);
+
+                            $$result.log('Attempting to seed data store with 500K objects...');
+
+                            var people = $.mockJSON.generateFromTemplate({
+                                'people|500000-500000': [{
+                                    'firstName': '@MALE_FIRST_NAME',
+                                    'lastName': '@LAST_NAME',
+                                    'age|18-85': 0
+                                }]
+                            }).people;
+
+                            people.forEach(function (person) {
+
+                                store.add(person);
+
+                                notify(people.length);
+
+                            });
+
+                        }
+
+                    };
+
+                    db.setDefaultErrorHandler(request);
+
+                    request.onsuccess = function (e) {
+
+                        db.instance = e.target.result;
+
+                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+
+                    };
+                };
+
+                openDatabase();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+</body>
+
+</html>

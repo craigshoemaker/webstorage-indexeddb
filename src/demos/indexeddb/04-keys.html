@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>Keys</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+    <style>
+        .control-row button:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <h1>Keys</h1>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+        <div class="control-row row">
+            <div class="col-sm-12">
+                List:
+                <button type="button" data-role="list-store" data-store="AutoKey" class="btn btn-default btn-link" title="List AutoKey Objects"><i class="fa fa-reorder"></i> AutoKey</button>
+                <button type="button" data-role="list-store" data-store="EmailKey" class="btn btn-default btn-link" title="List EmailKey Objects"><i class="fa fa-reorder"></i> EmailKey</button>
+                <button type="button" data-role="list-store" data-store="AutoKeyWithPath" class="btn btn-default btn-link" title="List AutoKeyWithPath Objects"><i class="fa fa-reorder"></i> AutoKeyWithPath</button>
+                <button type="button" data-role="list-store" data-store="GuidKey" class="btn btn-default btn-link" title="List Guid Objects"><i class="fa fa-reorder"></i> Guid</button>
+                <span class="text-muted">|</span>
+                <button type="button" id="create-button" class="btn btn-default btn-link fa fa-certificate" title="Create Database"></button>
+                <button type="button" id="delete-button" class="btn btn-default btn-link fa fa-warning" title="Delete Database"></button>
+            </div>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+    <script>
+        var db = {
+            name: 'KeysDB',
+            version: 1,
+            instance: {},
+            stores: {
+                autoKey: {
+                    name: 'AutoKey'
+                },
+                email: {
+                    name: 'EmailKey'
+                },
+                autoKeyWithPath: {
+                    name: 'AutoKeyWithPath'
+                },
+                guid: {
+                    name: 'GuidKey'
+                }
+            },
+            defaultErrorHandler: function (e) {
+                $$result.log(e);
+            },
+            setDefaultErrorHandler: function (request) {
+
+                if ('onerror' in request) {
+                    request.onerror = db.defaultErrorHandler;
+                }
+
+                if ('onblocked' in request) {
+                    request.onblocked = db.defaultErrorHandler;
+                }
+
+                if ('onabort' in request) {
+                    request.onabort = db.defaultErrorHandler;
+                }
+
+            }
+        };
+    </script>
+
+        <script data-step="1"
+                data-label="AutoKey"
+                data-listingonly="true"
+                title="">
+            var step1 = function () {
+                var newVersion;
+                //---
+                newVersion.createObjectStore(
+                    'AutoKey',
+                    {
+                        autoIncrement: true
+                    });
+                //---
+            }
+        </script>
+        <script data-step="2"
+                data-label="EmailKey"
+                data-listingonly="true"
+                title="">
+            var step2 = function () {
+                var newVersion;
+                //---
+                newVersion.createObjectStore(
+                    'EmailKey',
+                    {
+                        keyPath: 'email'
+                    });
+                //---
+            }
+        </script>
+        <script data-step="3"
+                data-label="AutoKeyWithPath"
+                data-listingonly="true"
+                title="">
+            var step3 = function () {
+                var newVersion;
+                //---
+                newVersion.createObjectStore(
+                    'AutoKeyWithPath',
+                    {
+                        keyPath: 'id',     
+                        autoIncrement: true
+                    });
+                //---
+            }
+        </script>
+        <script data-step="4"
+                data-label="Guid"
+                data-listingonly="true"
+                title="">
+            var step4 = function () {
+                var newVersion;
+                //---
+                newVersion.createObjectStore(
+                    'GuidKey',
+                    {
+                        keyPath: 'clientId'
+                    });
+                //---
+            }
+        </script>
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1,
+            step2: step2,
+            step3: step3,
+            step4: step4
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            } else {
+
+                var transactionTypes = {
+                    readwrite: 'readwrite',
+                    readonly: 'readonly'
+                };
+
+                var counter = 0;
+
+                var notify = function () {
+
+                    $$result.log('10 people objects are now added to each store.');
+
+                };
+
+                var createUUID = function () { // from http://bit.ly/HkAnFi
+                    // http://www.ietf.org/rfc/rfc4122.txt
+                    var s = [];
+                    var hexDigits = "0123456789abcdef";
+                    for (var i = 0; i < 36; i++) {
+                        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+                    }
+                    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+                    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+                    s[8] = s[13] = s[18] = s[23] = "-";
+
+                    var uuid = s.join("");
+                    return uuid;
+                }
+
+                $('#delete-button').click(function () {
+
+                    if (db.instance !== null && 'close' in db.instance) {
+
+                        db.instance.close();
+                    }
+
+                    $$result.log('Attempting to delete the database...');
+
+                    var delRequest = indexedDB.deleteDatabase(db.name);
+
+                    db.setDefaultErrorHandler(delRequest);
+
+                    delRequest.onsuccess = function () {
+
+                        db.instance = null;
+
+                        $$result.log('Database deleted');
+
+                    };
+
+                });
+
+                $('button[data-role="list-store"]').click(function () {
+                    $('#result').html('');
+                    var storeName = this.getAttribute('data-store');
+                    listStore(storeName);
+                });
+
+                var listStore = function (storeName) {
+
+                    var txn = db.instance.transaction([storeName], transactionTypes.readonly);
+
+                    var store = txn.objectStore(storeName);
+
+                    var cursor = store.openCursor();
+
+                    cursor.onsuccess = function (e) {
+
+                        var
+                            person = {},
+                            result = e.target.result;
+
+                        if (result !== null) {
+
+                            person = result.value;
+
+                            $$result.log('[' +
+                                result.key + ']  ' +
+                                person.firstName + ' ' +
+                                person.lastName + ', ' +
+                                person.age);
+
+                            result.continue();
+                        }
+
+                    };
+                };
+
+                $('#create-button').click(function () {
+                    openDatabase();
+                });
+
+                var openDatabase = function () {
+
+                    var request = indexedDB.open(db.name, db.version);
+
+                    request.onupgradeneeded = function (e) {
+
+                        var
+                            storeName,
+                            autoKeyStore, emailStore, autoKeyWithPathStore, guidStore,
+                            stores = [],
+                            newVersion = e.target.result;
+
+                        storeName = db.stores.autoKey.name;
+
+                        if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                            $$result.log('Creating <code>' + storeName + '</code> store');
+
+                            autoKeyStore = newVersion.createObjectStore(
+                                                        storeName,
+                                                        {
+                                                            autoIncrement: true
+                                                        });
+
+                            stores.push(autoKeyStore);
+                        }
+
+
+                        storeName = db.stores.email.name;
+
+                        if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                            $$result.log('Creating <code>' + storeName + '</code> store');
+
+                            emailStore = newVersion.createObjectStore(
+                                                        storeName,
+                                                        {
+                                                            keyPath: 'email'
+                                                        });
+
+                            stores.push(emailStore);
+                        }
+
+                        storeName = db.stores.autoKeyWithPath.name;
+
+                        if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                            $$result.log('Creating <code>' + storeName + '</code> store');
+
+                            autoKeyWithPathStore = newVersion.createObjectStore(
+                                                        storeName,
+                                                        {
+                                                            keyPath: 'id',
+                                                            autoIncrement: true
+                                                        });
+
+                            stores.push(autoKeyWithPathStore);
+                        }
+
+                        storeName = db.stores.guid.name;
+
+                        if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                            $$result.log('Creating <code>' + storeName + '</code> store');
+
+                            guidStore = newVersion.createObjectStore(
+                                                        storeName,
+                                                        {
+                                                            keyPath: 'clientId'
+                                                        });
+
+                            stores.push(guidStore);
+                        }
+
+                        seedDataStores(stores);
+
+                    };
+
+                    db.setDefaultErrorHandler(request);
+
+                    request.onsuccess = function (e) {
+
+                        db.instance = e.target.result;
+
+                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+
+                    };
+                };
+
+                var seedDataStores = function (stores) {
+                    var people = $.mockJSON.generateFromTemplate({
+                        'people|10-10': [{
+                            'clientId': '',
+                            'personId|101-500': 0,
+                            'firstName': '@MALE_FIRST_NAME',
+                            'lastName': '@LAST_NAME',
+                            'email': '@EMAIL',
+                            'age|18-85': 0
+                        }]
+                    }).people;
+
+                    stores.forEach(function (store) {
+
+                        people.forEach(function (person) {
+
+                            person.clientId = createUUID();
+
+                            store.add(person);
+
+                        });
+
+                    });
+
+                    notify();
+                };
+
+                openDatabase();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+</body>
+
+</html>

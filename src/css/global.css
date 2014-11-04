@@ -1,0 +1,127 @@
+header {
+    margin-top: 10px;
+}
+
+pre {
+    font-size:1.25em;
+}
+
+article {
+    display:none;
+    margin:25px;
+    margin-top:15px;
+}
+
+#result {
+    -webkit-box-shadow: 1px 1px 1px 1px #ccc;
+    box-shadow: 1px 1px 1px 1px #ccc;
+    height:400px;
+    overflow:auto;
+}
+
+    #result p img {
+        margin-top:20px;
+        border-radius:4px;
+    }
+
+#clear-button-container {
+    margin-right:20px;
+    margin-top:15px;
+}
+
+#tab-content-container pre {
+    margin-top:15px;
+}
+
+body {
+    /*background-image:url(../img/bkg.png);*/
+    background-repeat:no-repeat;
+}
+
+footer {
+    margin-left:25px;
+    margin-right:15px;
+    margin-bottom:15px;
+    font-size:.8em;
+    color:#666;
+    text-align:center;
+    margin-top:15px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color:#808080;
+}
+
+    h1 span {
+        font-size:.5em;
+        color:#ccc;
+    }
+
+h1 .muted {
+    color: #ddd;
+    font-size: 0.6em;
+    font-style: italic;
+}
+
+h5.muted {
+    text-transform:uppercase;
+}
+
+pre, code {
+    overflow: auto !important;
+    word-wrap: normal !important;
+    white-space: pre !important;
+}
+
+.tab-content pre {
+    max-height:408px;
+    /*overflow:auto;
+    white-space:nowrap;*/
+}
+
+.tab-content {
+    margin-bottom:10px;
+}
+
+#demo-nav {
+    opacity:0.25;
+}
+
+.hidden {
+    display:none;
+}
+
+#elements button {
+    margin-bottom:10px;
+    margin-top:-10px;
+    margin-right:4px;
+}
+
+.push-down {
+    margin-top:15px;
+}
+
+.control-row {
+    margin-bottom:10px;
+}
+
+    .control-row button:hover {
+        text-decoration:none;
+    }
+
+.info {
+    cursor:help !important;
+}
+
+.none {
+    display:none;
+}
+
+[data-role="concepts"] {
+    border-left:3px double #eee;
+}
+
+.code {
+    font-family: Consolas, 'Liberation Mono', Courier, monospace;
+    font-size: 1.2em;
+}

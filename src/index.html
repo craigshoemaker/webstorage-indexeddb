@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML5 Client-Side Persistent Applications</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/fontawesome/font-awesome.min.css" rel="stylesheet" />
+	<link href="css/global.css" rel="stylesheet" />
+	<style>
+		header {
+			background-color:#eee;
+			padding:50px;
+			padding-top:75px;
+			padding-bottom:75px;
+			margin:0px;
+		}
+
+		.dropdown {
+			border:solid 1px #fff;
+			border-radius:4px;
+			padding:15px;
+		}
+
+			.dropdown:hover {
+				border:solid 1px #ccc;
+				background-color:#eee;
+			}
+
+            .dropdown a:hover {
+                text-decoration: none;
+            }
+
+		.content-container {
+			margin-top:25px;
+		}
+	</style>
+</head>
+<body class="container">
+	<header>
+		<div>
+			<img src="img/course-logo-lg.png" class="img-responsive" alt="HTML5 Client-Side Persistent Applications" title="HTML5 Client-Side Persistent Applications" />
+		</div>
+
+	</header>
+	<article>
+
+		<div class="row content-container">
+			<div class="col-sm-6">
+				<div class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><h2><i class="fa fa-hdd"></i> Storage <b class="caret"></b></h2></a>
+					<ul class="dropdown-menu">
+                        <li><a href="demos/storage/01-local-api.html">Local Storage API</a></li>
+                        <li><a href="demos/storage/02-session-api.html">Session Storage API</a></li>
+                        <li><a href="demos/storage/03-exceedquota.html">Exceeding Storage Quota</a></li>
+                        <li><a href="demos/storage/04-storage-event.html">Storage Event</a></li>
+                        <li class="divider"></li>
+                        <li><a href="demos/storage/05-persistentform.html"><i class="fa fa-laptop"></i> Persistent Form</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><h2><i class="fa fa-sort-amount-desc"></i> IndexedDB <b class="caret"></b></h2></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="demos/indexeddb/01-initialization.html">Construction &amp; Destruction</a></li>
+                        <li><a href="demos/indexeddb/02-crud.html">CRUD Operations</a></li>
+                        <li><a href="demos/indexeddb/03-cursor.html">Cursors, Indexes &amp; Ranges</a></li>
+                        <li><a href="demos/indexeddb/04-keys.html">Keys</a></li>
+                        <li><a href="demos/indexeddb/05-performance.html" title="Note: This demo will attempt to load 500K objects into IndexedDB. Be prepared to wait ;)">Performance <i class="fa fa-warning"></i></a></li>
+                        <li><a href="demos/indexeddb/06-versions.html">Versions</a></li>
+                        <li class="divider"></li>
+                        <li><a href="demos/indexeddb/07-homes.html"><i class="fa fa-laptop"></i> Homes List</a></li>
+                        <li class="divider"></li>
+                        <li><a href="demos/indexeddb/08-capacity.html">Capacity</a></li>
+                    </ul>
+                </div>
+			</div>
+		</div>
+        <hr />
+		
+		<footer>From: <a href="http://pluralsight.com/courses/html5-web-storage-indexeddb-file-system" target="_blank">HTML5 Web Storage, IndexedDB and File System</a> by <a href="http://twitter.com/craigshoemaker" target="_blank"><img src="img/craig-shoemaker-logo.png" /></a></footer>
+	</article>
+	<script src="scripts/jquery.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+	<script>
+		$(function() {
+			$('article').fadeIn();
+		});
+	</script>
+</body>
+</html>

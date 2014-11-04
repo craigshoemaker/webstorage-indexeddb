@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>Cursors, Indexes &amp; Ranges</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <article>
+        <h1>Cursors, Indexes &amp; Ranges</h1>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+        <div class="control-row row">
+            <div class="col-sm-4">
+                <input type="text" id="input-box" placeholder="last name, age, age range, etc." class="form-control" />
+            </div>
+            <div class="col-sm-6">
+                <button type="button" id="create-button" class="btn btn-default btn-link fa fa-certificate" title="Create Database"></button>
+                <button type="button" id="delete-button" class="btn btn-default btn-link fa fa-warning" title="Delete Database"></button>
+            </div>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+    <script>
+        var db = {
+            name: 'CursorDB',
+            version: 1,
+            instance: {},
+            stores: {
+                people: {
+                    name: 'people',
+                    indexes: {
+                        lastName: {
+                            name: 'lastName',
+                            definition: { unique: false }
+                        },
+                        age: {
+                            name: 'age',
+                            definition: { unique: false }
+                        }
+                    },
+                }
+            },
+            defaultErrorHandler: function (e) {
+                $$result.log(e);
+            },
+            setDefaultErrorHandler: function (request) {
+
+                if ('onerror' in request) {
+                    request.onerror = db.defaultErrorHandler;
+                }
+
+                if ('onblocked' in request) {
+                    request.onblocked = db.defaultErrorHandler;
+                }
+
+                if ('onabort' in request) {
+                    request.onabort = db.defaultErrorHandler;
+                }
+
+            }
+        };
+    </script>
+
+        <script data-step="1"
+                data-label="db Model"
+                data-listingonly="true"
+                title="">
+            var step1 = function () {
+                //---
+                var db = {
+                    name: 'CursorDB',
+                    version: 1,
+                    instance: {},
+                    defaultErrorHandler: function (e) {
+                        $$result.log(e);
+                    },
+                    setDefaultErrorHandler: function (request) {
+
+                        if ('onerror' in request) {
+                            request.onerror = db.defaultErrorHandler;
+                        }
+
+                        if ('onblocked' in request) {
+                            request.onblocked = db.defaultErrorHandler;
+                        }
+
+                        if ('onabort' in request) {
+                            request.onabort = db.defaultErrorHandler;
+                        }
+
+                    }
+                };
+                //---
+            };
+        </script>
+        <script data-step="2"
+                data-label="Upgrade"
+                data-listingonly="true"
+                title="This code represents the implementation run during onupgradeneeded on order to create the data store and indexes. Pressing the Run button does nothing.">
+            var step2 = function () {
+                //---
+                // onupgradeneeded implementation
+                var newVersion = e.target.result;
+
+                if (!newVersion.objectStoreNames.contains('people')) {
+
+                    $$result.log('Creating <code>people</code> store');
+
+                    var store = newVersion.createObjectStore('people', { autoIncrement: true });
+
+                    store.createIndex('lastName', 'lastName', { unique: false });
+
+                    store.createIndex('age', 'age', { unique: false });
+
+                    var people = $.mockJSON.generateFromTemplate({
+                        'people|100-100': [{
+                            'firstName': '@MALE_FIRST_NAME',
+                            'lastName': '@LAST_NAME',
+                            'age|18-85': 0
+                        }]
+                    }).people;
+
+                    people.forEach(function (person) {
+
+                        store.add(person);
+
+                    });
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="3" data-label="Cursor" title="Creates a cursor to read the entire contents of the person store.">
+            var step3 = function () {
+                //---
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    store = transaction.objectStore('people'),
+                    cursorRequest = store.openCursor();
+
+                db.setDefaultErrorHandler(cursorRequest);
+
+                cursorRequest.onsuccess = function (e) {
+
+                    var
+                        person = {},
+                        result = e.target.result;
+
+                    if (result !== null) {
+
+                        person = result.value;
+
+                        $$result.log('[' +
+                            result.key + ']  ' +
+                            person.firstName + ' ' +
+                            person.lastName + ', ' +
+                            person.age);
+
+                        result.continue();
+                    }
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="4" data-label="Index">
+            var step4 = function () {
+                //---
+                var lastName = $('#input-box').val();
+
+                if (lastName.length === 0) {
+                    $$result.log('You need to enter a last name.')
+                    return;
+                }
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    index = transaction.objectStore('people').index('lastName');
+
+                var getRequest = index.get(lastName);
+
+                db.setDefaultErrorHandler(getRequest);
+
+                getRequest.onsuccess = function (e) {
+
+                    var
+                        person = e.target.result;
+
+                    if (person) {
+
+                        $$result.log(person.firstName + ' ' + person.lastName);
+                    }
+                };
+                //---
+            }
+        </script>
+        <script data-step="5" data-label="Range (numeric)">
+            var step5 = function () {
+                //---
+                var
+                    parts = $('#input-box').val().split('-'),
+                    startAge = 0,
+                    endAge = 0;
+
+                startAge = Number(parts[0]);
+
+                if (parts.length > 1) {
+                    endAge = Number(parts[1]);
+                }
+
+                if (startAge < 18) {
+                    $$result.log('You need to enter an age.')
+                    return;
+                }
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    index = transaction.objectStore('people').index('age'),
+                    range;
+
+                if (endAge > 0) {
+
+                    range = IDBKeyRange.bound(startAge, endAge);
+
+                } else {
+
+                    //range = IDBKeyRange.upperBound(startAge);
+                    range = IDBKeyRange.lowerBound(startAge, false);
+
+                }
+
+
+                var cursorRequest = index.openCursor(range);
+
+                db.setDefaultErrorHandler(cursorRequest);
+
+                cursorRequest.onsuccess = function (e) {
+
+                    var
+                        person = {},
+                        result = e.target.result;
+
+                    if (result !== null) {
+
+                        person = result.value;
+
+                        $$result.log('[' +
+                            result.key + ']  ' +
+                            person.firstName + ' ' +
+                            person.lastName + ', ' +
+                            person.age);
+
+                        result.continue();
+                    }
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="6" data-label="Range (string)">
+            var step6 = function () {
+                //---
+                var lastName = $('#input-box').val();
+
+                if (lastName.length === 0) {
+                    $$result.log('You need to enter a last name.')
+                    return;
+                }
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    index = transaction.objectStore('people').index('lastName'),
+                    range;
+
+                //range = IDBKeyRange.only(lastName);
+                //range = IDBKeyRange.upperBound(lastName);
+                range = IDBKeyRange.lowerBound(lastName);
+
+
+                var cursorRequest = index.openCursor(range);
+
+                db.setDefaultErrorHandler(cursorRequest);
+
+                cursorRequest.onsuccess = function (e) {
+
+                    var
+                        person = {},
+                        result = e.target.result;
+
+                    if (result !== null) {
+
+                        person = result.value;
+
+                        $$result.log('[' +
+                            result.key + ']  ' +
+                            person.firstName + ' ' +
+                            person.lastName + ', ' +
+                            person.age);
+
+                        result.continue();
+                    }
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="7" data-label="Ordering">
+            var step7 = function () {
+                //---
+                var lastName = $('#input-box').val();
+
+                if (lastName.length === 0) {
+                    $$result.log('You need to enter a last name.')
+                    return;
+                }
+
+                var
+                    transaction = db.instance.transaction(['people'], 'readonly'),
+                    index = transaction.objectStore('people').index('lastName'),
+                    range;
+
+                range = IDBKeyRange.only(lastName);
+                //range = IDBKeyRange.upperBound(lastName);
+                //range = IDBKeyRange.lowerBound(lastName);
+
+                var cursorRequest = index.openCursor(range, 'next');
+                //var cursorRequest = index.openCursor(range, 'nextunique');
+                //var cursorRequest = index.openCursor(range, 'prev');
+                //var cursorRequest = index.openCursor(range, 'prevunique');
+
+                db.setDefaultErrorHandler(cursorRequest);
+
+                cursorRequest.onsuccess = function (e) {
+
+                    var
+                        person = {},
+                        result = e.target.result;
+
+                    if (result !== null) {
+
+                        person = result.value;
+
+                        $$result.log('[' +
+                            result.key + ']  ' +
+                            person.firstName + ' ' +
+                            person.lastName + ', ' +
+                            person.age);
+
+                        result.continue();
+                    }
+
+                };
+                //---
+            }
+        </script>
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1,
+            step2: step2,
+            step3: step3,
+            step4: step4,
+            step5: step5,
+            step6: step6,
+            step7: step7
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            } else {
+
+                var transactionTypes = {
+                    readwrite: 'readwrite',
+                    readonly: 'readonly'
+                };
+
+                var counter = 0;
+
+                var notify = function (length) {
+                    counter++;
+                    if (counter == length) {
+                        $$result.log(length + ' people objects are now added to the <code>people</code> store.');
+                    }
+                };
+
+                var getObjectStore = function (storeName, transactionType) {
+
+                    if (!transactionType) {
+                        transactionType = transactionTypes.readonly;
+                    }
+
+                    var txn = db.instance.transaction([storeName], transactionType);
+                    return store = txn.objectStore(storeName);
+                };
+
+                $('#seed-button').click(function () {
+
+
+                });
+
+                $('#delete-button').click(function () {
+
+                    if (db.instance !== null) {
+
+                        db.instance.close();
+
+                        $$result.log('Attempting to delete the database...');
+
+                        var delRequest = indexedDB.deleteDatabase(db.name);
+
+                        db.setDefaultErrorHandler(delRequest);
+
+                        delRequest.onsuccess = function () {
+
+                            db.instance = null;
+
+                            $$result.log('Database deleted');
+
+                        };
+
+                    } else {
+
+                        $$result.log('You must first create a database before attempting a delete. Refresh the page to create the database again.');
+
+                    }
+
+                });
+
+                $('#create-button').click(function () {
+                    openDatabase();
+                });
+
+                var openDatabase = function () {
+                    var request = indexedDB.open(db.name, db.version);
+
+                    request.onupgradeneeded = function (e) {
+
+                        var newVersion = e.target.result;
+
+                        if (!newVersion.objectStoreNames.contains(db.stores.people.name)) {
+
+                            $$result.log('Creating <code>' + db.stores.people.name + '</code> store');
+
+                            var store = newVersion.createObjectStore(
+                                db.stores.people.name,
+                                {
+                                    autoIncrement: true
+                                });
+
+                            var index = db.stores.people.indexes.lastName;
+                            store.createIndex(index.name, index.name, index.definition);
+
+                            index = db.stores.people.indexes.age;
+                            store.createIndex(index.name, index.name, index.definition);
+
+                            var people = $.mockJSON.generateFromTemplate({
+                                'people|100-100': [{
+                                    'firstName': '@MALE_FIRST_NAME',
+                                    'lastName': '@LAST_NAME',
+                                    'age|18-85': 0
+                                }]
+                            }).people;
+
+                            people.forEach(function (person) {
+
+                                store.add(person);
+
+                                notify(people.length);
+
+                            });
+
+                        }
+
+                    };
+
+                    db.setDefaultErrorHandler(request);
+
+                    request.onsuccess = function (e) {
+
+                        db.instance = e.target.result;
+
+                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+
+                    };
+                };
+
+                openDatabase();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>Capacity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <article>
+        <h1>Capacity</h1>
+        <div class="control-row row">
+            <div class="col-sm-6">
+                <button type="button" id="refresh-button" class="btn btn-default btn-link fa fa-refresh" title="Drop and Create Database"></button>
+            </div>
+        </div>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+        <script data-step="1"
+                data-label="57 MB Attempt"
+                title="">
+            var largeDataFileContents = null;
+            var step1 = function () {
+                //---
+                var insert = function () {
+
+                    var obj = localDatabase.createPersistentObject();
+
+                    obj.data = largeDataFileContents;
+
+                    $$result.log('Attempting insert...');
+
+                    var insertRequest = localDatabase.insert(capacityDB.stores.capacity.name, obj, function (e) {
+
+                        $$result.log('Object added to database.');
+
+                    });
+
+                    localDatabase.setDefaultErrorHandler(insertRequest);
+
+                };
+
+                if (largeDataFileContents === null) {
+
+                    $$result.log('Requesting large data file...');
+
+                    $.get('/demos/huge-file.txt').done(function (response) {
+
+                        try {
+
+                            largeDataFileContents = response;
+
+                            insert();
+
+                        } catch (e) {
+
+                            $$result.log(e);
+
+                        }
+
+                    });
+
+                } else {
+
+                    insert();
+
+                }
+                //---
+            };
+        </script>
+
+    <script>
+        var capacityDB = (function () {
+
+            var model = {
+                name: 'CapacityDB',
+                instance: null,
+                version: 1,
+                stores: {
+                    capacity: {
+                        name: 'capacity',
+                        key: {
+                            keyPath: 'clientId'
+                        }
+                    }
+                },
+
+                upgrade: function (e) {
+
+                    var
+                        newVersion = e.target.result,
+                        storeModel = capacityDB.stores.capacity,
+                        capacityStore,
+                        store;
+
+                    store = capacityDB.stores.capacity;
+
+                    if (!newVersion.objectStoreNames.contains(store.name)) {
+
+                        capacityStore = newVersion.createObjectStore(store.name,
+                                                                     store.key);
+                    }
+                }
+            };
+
+            return model;
+
+        })();
+    </script>
+
+
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            } else {
+
+
+                $('#refresh-button').click(function () {
+
+                    createCleanDatabase();
+
+                });
+
+                $$result.log('Preparing demo for use...');
+
+                var createCleanDatabase = function () {
+
+                    $$result.log('Deleting the <code>CapacityDB</code> database...');
+
+                    localDatabase.deleteDatabase(capacityDB, function () {
+
+                        $$result.log('Database deleted. Creating a new version.');
+
+                        localDatabase.open(capacityDB, function () {
+
+                            $$result.log('A blank instance of the <code>CapacityDB</code> database is now ready.');
+
+                        });
+
+                    });
+
+                };
+
+                createCleanDatabase();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+    <script src="localDatabase.js"></script>
+</body>
+
+</html>

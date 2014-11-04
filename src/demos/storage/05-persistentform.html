@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Persistent Form</title>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" />
+    <style>
+        header {
+            margin-top:10px;
+        }
+
+        textarea {
+            min-height:200px;
+        }
+
+        label {
+            font-weight:normal;
+        }
+
+        #state-box {
+            width:90px;
+        }
+
+        #msg-container {
+            position:relative;
+            min-height:55px;
+        }
+
+        #msg {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <article class="container">
+        <div class="well">
+            <form>
+                <input type="radio" id="localStorage" name="storage-strategy" value="0" checked /> <label for="localStorage"><code>localStorage</code></label> <br />
+                <input type="radio" id="sessionStorage" name="storage-strategy" value="1" /> <label for="sessionStorage"><code>sessionStorage</code></label>
+            </form>
+        </div>
+        <div id="msg-container" class="alert alert-info">
+            <span id="msg" class="text-muted"></span>
+        </div>
+        <h1>Add Home</h1>
+        <form id="add-home-form" name="add-home-form" class="form-horizontal">
+            <fieldset>
+                <legend>Add a new home for listing.</legend>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="address-box" class="control-label">Address</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input 
+                            type="text" 
+                            id="address-box" name="address-box"
+                            autofocus required
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="city-box" class="control-label">City</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input 
+                            type="text" 
+                            id="city-box" name="city-box"
+                            required 
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="state-box" class="control-label">State</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input 
+                            type="text" 
+                            id="state-box" name="state-box" 
+                            required
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="zipcode-box" class="control-label">Zip Code</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input 
+                            type="number" 
+                            id="zipcode-box" name="zipcode-box" 
+                            min="0" max="99999"
+                            required
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="comments-box" class="control-label">Comments</label></div>
+                    <div class="col-sm-9">
+                        <textarea 
+                            id="comments-box" name="comments-box" 
+                            required
+                            class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-2">
+                        <input type="button"
+                               id="add-home-button" name="add-home-button"
+                               value="Send" class="btn btn-default btn-primary btn-lg" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <div id="explanation" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Automatic Persistent Form</h4>
+              </div>
+              <div class="modal-body">
+                  <p class="well well-sm">This page saves to either local or session storage every 5 seconds. Notice how if
+                      you make changes to the form (and allow it to save) you can leave the page and upon
+                      your return your data will return back to the input fields.
+                  </p>
+                  <h4>Local Storage</h4>
+                  <p>If you select <code>localStorage</code> then you can close the browser and return,
+                      open a new tab and navigate back to the page - even reboot your machine and your 
+                      data will persist. 
+                  </p>
+                  <p class="alert alert-info"><strong>Note:</strong> Context changes when you switch from
+                      regular to &quot;in private&quot; or &quot;incognito&quot; browsing. If you find 
+                      unexpected results in some <a href="http://stackoverflow.com/a/9319378/74399">browsers private browsing may be to blame</a>.</p>
+
+                  <h4>Session Storage</h4>
+                  <p>Using <code>sessionStorage</code>, however, is only good during the browser's session.</p>
+                  <p class="alert alert-info"><strong>Note: </strong> Sessions are not continuous in different tabs.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </article>
+    <script src="../../scripts/jquery.js"></script>
+    <script src="../../scripts/bootstrap.js"></script>
+    <script src="../../scripts/layoutMaster.js"></script>
+    <script src="localDataService.js"></script>
+    <script src="viewModel.js"></script>
+</body>
+</html>

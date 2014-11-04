@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Homes List</title>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" />
+    <script src="../../scripts/modernizr.js"></script>
+    <style>
+        textarea {
+            min-height:200px;
+        }
+
+        label {
+            font-weight:normal;
+        }
+
+        #state-box {
+            width:90px;
+        }
+    </style>
+</head>
+<body>
+    <article class="container">
+        <h1>Add Home</h1>
+        <div class="row">
+            <div id="unsupported" class="col-sm-7 alert alert-danger none">
+                <p>
+                    <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                    therefore this sample will not work in this browser.
+                    When these samples were developed, Safari was the only desktop browser which
+                    didn't included support for IndexedDB.
+                </p>
+                <p>
+                    You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                    page for the most recent browser support details.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <form id="add-home-form" name="add-home-form" class="form-horizontal">
+                    <input type="hidden" data-bind="value: clientId" />
+                    <fieldset>
+                        <legend>Add a new home for listing.</legend>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label for="address-box" class="control-label">Address</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text"
+                                       id="address-box" name="address-box"
+                                       autofocus required
+                                       class="form-control"
+                                       data-bind="value: address" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label for="city-box" class="control-label">City</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text"
+                                       id="city-box" name="city-box"
+                                       required
+                                       class="form-control"
+                                       data-bind="value: city" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label for="state-box" class="control-label">State</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text"
+                                       id="state-box" name="state-box"
+                                       required
+                                       class="form-control"
+                                       data-bind="value: state" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label for="zipcode-box" class="control-label">Zip Code</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="number"
+                                       id="zipcode-box" name="zipcode-box"
+                                       min="0" max="99999"
+                                       required
+                                       class="form-control"
+                                       data-bind="value: zip" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label for="comments-box" class="control-label">Comments</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <textarea id="comments-box" name="comments-box"
+                                          required
+                                          class="form-control"
+                                          data-bind="value: comments"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-9 col-sm-offset-2">
+                                <button type="button"
+                                        class="btn btn-default btn-primary btn-lg btn-link"
+                                        data-bind="click: clear">
+                                    Clear
+                                </button>
+                                <button type="button"
+                                        id="add-home-button" name="add-home-button"
+                                        class="btn btn-default btn-primary btn-lg"
+                                        data-bind="click: save, text: buttonLabel"></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>Zip</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="template: { name: 'list-template', foreach: homes }"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <script type="text/html" id="list-template">
+            <tr>
+                <td>
+                    <button data-bind="click: $parent.delete, attr: {'data-id': clientId}, clickBubble: false" title="Delete" class="btn btn-default btn-xs"><i class="fa fa-trash"></i></button>
+                    <a href="#" data-bind="click: $parent.select, attr: {'data-id': clientId}, text: address, clickBubble: false"></a>
+                </td>
+                <td><span data-bind="text: city"></span></td>
+                <td><span data-bind="text: zip"></span></td>
+            </tr>
+        </script>
+
+    </article>
+    <script src="../../scripts/jquery.js"></script>
+    <script src="../../scripts/bootstrap.js"></script>
+    <script src="../../scripts/knockout-3.0.0.js"></script>
+    <script src="../../scripts/layoutMaster.js"></script>
+    <script src="../../scripts/q.js"></script>
+    <script src="../../scripts/Math.uuid.js"></script>
+    <script src="db.js" data-title="IndexedDB Abstraction Layer"></script>
+    <script src="homesDBModel.js" data-title="Model of Local Database"></script>
+    <script src="viewModel.js"></script>
+</body>
+</html>

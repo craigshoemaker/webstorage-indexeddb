@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link rel="icon" type="image/png" href="../../img/favicon.png">
+        <meta charset="utf-8" />
+        <title>Storage Event</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+        <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+        <link href="../../css/global.css" rel="stylesheet" />
+        <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <article>
+            <h1>Storage Event</h1>
+            <p class="col-sm-7 alert alert-info">
+                Run the code below then execute another storage demo in a new tab.
+                When you return to this tab, you'll see the results of the storage
+                event.
+            </p>
+
+        </article>
+        <div id="result-stub" class="well hidden">
+        </div>
+        
+        <script data-step="1" data-label="Storage Event">
+            var step1 = function() {
+                //---
+                var storage = window.localStorage;
+
+                window.addEventListener('storage', function (e) {
+
+                    $$result.log(e);
+
+                }, false);
+
+                //---
+            }
+        </script>
+        <script data-label="Command Object Mapping">
+            var _commands = {
+                currentStep: 0,
+                step1: step1
+            };
+        </script>
+        <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+    </body>
+</html>

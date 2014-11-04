@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>CRUD Operations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+    <style>
+        #controls {
+            margin-bottom: 18px;
+        }
+
+        .info {
+            cursor: help !important;
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <h1>CRUD Operations</h1>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+        <div id="controls" class="row">
+            <div class="col-sm-4">
+                <input type="number" id="id-box" placeholder="key value" class="form-control" />
+            </div>
+            <div class="col-sm-2">
+                <button type="button" id="create-button" class="btn btn-default btn-link fa fa-certificate" title="Create Database"></button>
+                <button type="button" id="delete-button" class="btn btn-default btn-link fa fa-warning" title="Delete Database"></button>
+            </div>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+        <script>
+            var db = {
+                name: 'CrudDB',
+                version: 1,
+                instance: {},
+                storeNames: {
+                    courses: 'courses'
+                },
+                defaultErrorHandler: function (e) {
+                    $$result.log(e);
+                },
+                setDefaultErrorHandler: function (request) {
+
+                    if ('onerror' in request) {
+                        request.onerror = db.defaultErrorHandler;
+                    }
+
+                    if ('onblocked' in request) {
+                        request.onblocked = db.defaultErrorHandler;
+                    }
+
+                    if ('onabort' in request) {
+                        request.onabort = db.defaultErrorHandler;
+                    }
+
+                }
+            };
+        </script>
+
+        <script data-step="1" data-label="db Model"
+                data-listingonly="true"
+                title="This listing shows you the object used to model the settings and encapsulate  the behavior associated with use of IndexedDB for this demo. Pressing the Run button does nothing.">
+            var step1 = function () {
+                //---
+                var db = {
+                    name: 'CrudDB',
+                    version: 1,
+                    instance: {},
+                    storeNames: {
+                        courses: 'courses'
+                    },
+                    defaultErrorHandler: function (e) {
+                        $$result.log(e);
+                    },
+                    setDefaultErrorHandler: function (request) {
+
+                        if ('onerror' in request) {
+                            request.onerror = db.defaultErrorHandler;
+                        }
+
+                        if ('onblocked' in request) {
+                            request.onblocked = db.defaultErrorHandler;
+                        }
+
+                    }
+                };
+                //---
+            };
+        </script>
+        <script data-step="2" data-label="Create">
+            var step2 = function () {
+                //---
+                var dt = new Date();
+
+                var course = {
+                    title: 'HTML5 Advanced Topics',
+                    author: {
+                        first: 'Craig',
+                        last: 'Shoemaker'
+                    },
+                    courseID: 'html5-advanced',
+                    insertDate: dt,
+                    modifiedDate: dt
+                };
+
+
+                var transaction = db.instance.transaction([db.storeNames.courses], 'readwrite');
+
+                var
+                    store = transaction.objectStore(db.storeNames.courses),
+                    addRequest = store.add(course);
+
+                db.setDefaultErrorHandler(addRequest);
+
+                addRequest.onsuccess = function (e) {
+                    $$result.log('Course added');
+                    $$result.log('key: ' + e.target.result);
+                    $('#id-box').val(e.target.result);
+                };
+                //---
+            }
+        </script>
+        <script data-step="3" data-label="Read">
+            var step3 = function () {
+                //---
+                var transaction = db.instance.transaction([db.storeNames.courses], 'readonly');
+
+                var store = transaction.objectStore(db.storeNames.courses);
+                debugger;
+                var key = Number($('#id-box').val());
+                var getRequest = store.get(key);
+
+                db.setDefaultErrorHandler(getRequest);
+
+                getRequest.onsuccess = function (e) {
+
+                    var course = e.target.result;
+
+                    if (course !== undefined) {
+
+                        $$result.log(course);
+
+                    } else {
+
+                        $$result.log('A course with the key of ' + key + ' does not exist');
+
+                    }
+
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="4" data-label="Update">
+            var step4 = function () {
+                //---
+                var transaction = db.instance.transaction([db.storeNames.courses], 'readwrite');
+
+                var
+                    store = transaction.objectStore(db.storeNames.courses),
+                    key = Number($('#id-box').val()),
+                    getRequest = store.get(key);
+
+                db.setDefaultErrorHandler(getRequest);
+
+                getRequest.onsuccess = function (e) {
+
+                    var course = e.target.result;
+
+                    if (course !== undefined) {
+
+                        course.modifiedDate = new Date();
+
+                        var putRequest = store.put(course, key);
+
+                        db.setDefaultErrorHandler(putRequest);
+
+                        putRequest.onsuccess = function (e) {
+                            $$result.log('Course Updated');
+                        };
+
+                    } else {
+
+                        $$result.log('A course with the key of ' + key + ' does not exist');
+
+                    }
+
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="5" data-label="Delete">
+            var step5 = function () {
+                //---
+                var transaction = db.instance.transaction([db.storeNames.courses], 'readwrite');
+
+                var
+                    store = transaction.objectStore(db.storeNames.courses),
+                    key = Number($('#id-box').val()),
+                    deleteRequest = store.delete(key);
+
+                db.setDefaultErrorHandler(deleteRequest);
+
+                deleteRequest.onsuccess = function (e) {
+                    $$result.log('Course deleted');
+                    $('#id-box').val('');
+                };
+                //---
+            }
+        </script>
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1,
+            step2: step2,
+            step3: step3,
+            step4: step4,
+            step5: step5
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            } else {
+
+                $('#delete-button').click(function () {
+
+                    if (db.instance !== null) {
+
+                        db.instance.close();
+
+                        $$result.log('Attempting to delete the database...');
+
+                        var delRequest = indexedDB.deleteDatabase(db.name);
+
+                        delRequest.onblocked = delRequest.onerror = $$result.logObject;
+
+                        delRequest.onsuccess = function () {
+
+                            db.instance = null;
+
+                            $$result.log('Database deleted');
+
+                        };
+
+                    } else {
+
+                        $$result.log('You must first create a database before attempting a delete. Refresh the page to create the database again.');
+
+                    }
+
+                });
+
+                $('#create-button').click(function () {
+                    openDatabase();
+                });
+
+                var openDatabase = function () {
+                    var openRequest = indexedDB.open(db.name, db.version);
+
+                    openRequest.onupgradeneeded = function (e) {
+
+                        var newVersion = e.target.result;
+
+                        if (!newVersion.objectStoreNames.contains(db.storeNames.courses)) {
+
+                            $$result.log('Creating <code>courses</code> store');
+
+                            newVersion.createObjectStore(db.storeNames.courses, { autoIncrement: true });
+
+                        }
+
+                    };
+
+                    db.setDefaultErrorHandler(openRequest);
+
+                    openRequest.onsuccess = function (e) {
+
+                        db.instance = e.target.result;
+
+                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+
+                    };
+                };
+
+                openDatabase();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+</body>
+</html>

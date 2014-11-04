@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link rel="icon" type="image/png" href="../../img/favicon.png">
+        <meta charset="utf-8" />
+        <title>Session Storage API</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+        <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+        <link href="../../css/global.css" rel="stylesheet" />
+        <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <article>
+            <h1>Session Storage API</h1>
+        </article>
+        <div id="result-stub" class="well hidden">
+        </div>
+        
+        <script data-step="1" data-label="Dot Operator">
+            var step1 = function() {
+                //---
+                var storage = window.sessionStorage;
+
+                if (storage.firstName === undefined) {
+
+                    $$result.log('firstName is not in session storage');
+
+                    storage.firstName = 'Craig';
+
+                } else {
+
+                    $$result.logBold('firstName', storage.firstName);
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="2" data-label="Get/Set Functions">
+            var step2 = function() {
+                //---
+                var storage = window.sessionStorage;
+
+                if (storage.getItem('lastName') === null) {
+
+                    $$result.log('lastName is not in session storage');
+
+                    storage.setItem('lastName', 'Shoemaker');
+
+                } else {
+                    
+                    $$result.logBold('lastName', storage.getItem('lastName'));
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="3" data-label="Brackets">
+            var step3 = function() {
+                //---
+                var storage = window.sessionStorage;
+
+                if (storage['twitter'] === undefined) {
+
+                    $$result.log('twitter is not in session storage');
+
+                    storage['twitter'] = '@craigshoemaker';
+
+                } else {
+
+                    $$result.logBold('twitter', storage['twitter']);
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="4" data-label="Remove Item">
+            var step4 = function() {
+                //---
+                var storage = window.sessionStorage;
+
+                if (storage.lastName !== undefined) {
+
+                    storage.removeItem('lastName');
+
+                    $$result.log('lastName is removed');
+
+                } else {
+
+                    $$result.log('lastName is not found');
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="5" data-label="Keys &amp; Length">
+            var step5 = function() {
+                //---
+                var
+                    storage = window.sessionStorage,
+                    key = '';
+
+                $$result.logBold('Using key Function');
+
+                for (var i = 0, len = storage.length; i < len; i++) {
+
+                    key = storage.key(i);
+
+                    $$result.logBold(key, storage[key]);
+
+                }
+
+                $$result.hr();
+
+                $$result.logBold('Extracting with Object.keys');
+
+                // returns array of keys
+                var keys = Object.keys(storage);
+
+                if (keys.length > 0) {
+
+                    $$result.log(keys);
+
+                } else {
+
+                    $$result.log('No keys defined.');
+
+                }
+                //---
+            }
+        </script>
+        <script data-step="6" data-label="Clear">
+            var step6 = function() {
+                //---
+                window.sessionStorage.clear();
+
+                $$result.log('All contents of session storage are destroyed.');
+                //---
+            }
+        </script>
+        <script data-label="Command Object Mapping">
+            var _commands = {
+                currentStep: 0,
+                step1: step1,
+                step2: step2,
+                step3: step3,
+                step4: step4,
+                step5: step5,
+                step6: step6
+            };
+        </script>
+        <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+    </body>
+</html>

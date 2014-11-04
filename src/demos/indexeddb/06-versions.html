@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../img/favicon.png">
+    <meta charset="utf-8" />
+    <title>Versions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/global.css" rel="stylesheet" media="screen">
+    <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <article>
+        <h1>Versions</h1>
+        <div id="unsupported" class="col-sm-7 alert alert-danger none">
+            <p>
+                <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                therefore this sample will not work in this browser.
+                When these samples were developed, Safari was the only desktop browser which
+                didn't included support for IndexedDB.
+            </p>
+            <p>
+                You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                page for the most recent browser support details.
+            </p>
+        </div>
+    </article>
+    <div id="result-stub" class="well hidden">
+    </div>
+
+    <script>
+        var db = {
+            name: 'VersionsDB',
+            version: null,
+            instance: {},
+            defaultErrorHandler: function (e) {
+                $$result.log(e);
+            },
+            setDefaultErrorHandler: function (request) {
+
+                if ('onerror' in request) {
+                    request.onerror = db.defaultErrorHandler;
+                }
+
+                if ('onblocked' in request) {
+                    request.onblocked = db.defaultErrorHandler;
+                }
+
+                if ('onabort' in request) {
+                    request.onabort = db.defaultErrorHandler;
+                }
+
+            }
+        };
+    </script>
+
+        <script data-step="1"
+                data-label="db Model"
+                data-listingonly="true"
+                title="This listing shows you the object used to model the settings and encapsulate  the behavior associated with use of IndexedDB for this demo. Pressing the Run button does nothing.">
+            var step1 = function () {
+                //---
+                var db = {
+                    name: 'VersionsDB',
+                    version: null,
+                    instance: {},
+                    defaultErrorHandler: function (e) {
+                        $$result.log(e);
+                    },
+                    setDefaultErrorHandler: function (request) {
+
+                        if ('onerror' in request) {
+                            request.onerror = db.defaultErrorHandler;
+                        }
+
+                        if ('onblocked' in request) {
+                            request.onblocked = db.defaultErrorHandler;
+                        }
+
+                        if ('onabort' in request) {
+                            request.onabort = db.defaultErrorHandler;
+                        }
+
+                    }
+                };
+                //---
+            };
+        </script>
+        <script data-step="2"
+                data-label="Version 1"
+                title="Pressing the Run button does nothing.">
+            var step2 = function () {
+                //---
+                db.version = 1;
+
+                var request = indexedDB.open(db.name, db.version);
+
+                db.setDefaultErrorHandler(request);
+
+                request.onupgradeneeded = function (e) {
+
+                    var
+                        storeName,
+                        newVersion = e.target.result;
+
+                    $$result.log('Upgrading to version: ' + newVersion.version);
+
+                    storeName = 'Employees';
+
+                    if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                        $$result.log('Creating <code>' + storeName + '</code> store');
+
+                        var people = newVersion.createObjectStore(storeName,
+                                                {
+                                                    keyPath: 'clientId'
+                                                });
+                    }
+                }
+
+                request.onsuccess = function (e) {
+
+                    db.instance = e.target.result;
+
+                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                                    db.version + ') database is open and ready.');
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="3"
+                data-label="Version 2"
+                title="Pressing the Run button does nothing.">
+            var step3 = function () {
+                var newVersion;
+                //---
+                if (db.instance !== null && 'close' in db.instance) {
+
+                    db.instance.close();
+
+                }
+
+                db.version = 2;
+
+                var request = indexedDB.open(db.name, db.version);
+
+                db.setDefaultErrorHandler(request);
+
+                request.onupgradeneeded = function (e) {
+
+                    var
+                        storeName,
+                        newVersion = e.target.result;
+
+                    storeName = 'Widgets';
+
+                    if (!newVersion.objectStoreNames.contains(storeName)) {
+
+                        $$result.log('Creating <code>' + storeName + '</code> store');
+
+                        var people = newVersion.createObjectStore(
+                                                    storeName,
+                                                    {
+                                                        autoIncrement: true
+                                                    });
+                    }
+
+                    storeName = 'Employees';
+
+                    if (newVersion.objectStoreNames.contains(storeName)) {
+                        var employeeStore = e.currentTarget.transaction.objectStore('Employees');
+
+                        $$result.log('Adding an index named <code>email</code> to the <code>Employees</code> store');
+                        employeeStore.createIndex('email', 'email', { unique: true });
+                    }
+                }
+
+                request.onsuccess = function (e) {
+
+                    db.instance = e.target.result;
+
+                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                                    db.version + ') database is open and ready.');
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="4"
+                data-label="Version 3"
+                title="Pressing the Run button does nothing.">
+            var step4 = function () {
+                //---
+                if (db.instance !== null && 'close' in db.instance) {
+
+                    db.instance.close();
+
+                }
+
+                db.version = 3;
+
+                var request = indexedDB.open(db.name, db.version);
+
+                db.setDefaultErrorHandler(request);
+
+                request.onupgradeneeded = function (e) {
+
+                    var
+                        storeName,
+                        newVersion = e.target.result;
+
+                    $$result.log('Upgrading to version: ' + newVersion.version);
+
+                    newVersion.deleteObjectStore('Widgets');
+
+                    $$result.log('Deleted <code>Widgets</code> store');
+
+                };
+
+                request.onsuccess = function (e) {
+
+                    db.instance = e.target.result;
+
+                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                                    db.version + ') database is open and ready.');
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="5" data-label="Delete Database">
+            var step5 = function () {
+                //---
+                if (db.instance !== null && 'close' in db.instance) {
+
+                    db.instance.close();
+
+                }
+
+                $$result.log('Attempting to delete the database...');
+
+                var delRequest = indexedDB.deleteDatabase(db.name);
+
+                db.setDefaultErrorHandler(delRequest);
+
+                delRequest.onsuccess = function () {
+
+                    db.instance = null;
+
+                    $$result.log('Database deleted');
+
+                };
+                //---
+            };
+
+        </script>
+    <script data-label="Command Object Mapping">
+        var _commands = {
+            currentStep: 0,
+            step1: step1,
+            step2: step2,
+            step3: step3,
+            step4: step4,
+            step5: step5
+        };
+    </script>
+    <script>
+        var demoLoad = function () {
+
+            if (!window.indexedDB) {
+
+                $('#unsupported').fadeIn();
+
+            }
+
+        };
+    </script>
+    <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+</body>
+
+</html>

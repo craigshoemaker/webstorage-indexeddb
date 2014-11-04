@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link rel="icon" type="image/png" href="../../img/favicon.png">
+        <meta charset="utf-8" />
+        <title>Construction &amp; Destruction</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../../css/bootstrap/bootstrap.css" rel="stylesheet" />
+        <link href="../../css/fontawesome/font-awesome.css" rel="stylesheet" />
+        <link href="../../css/global.css" rel="stylesheet" media="screen">
+        <link href="../../css/github-theme.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <article>
+            <h1>Construction &amp; Destruction</h1>
+            <div id="unsupported" class="col-sm-7 alert alert-danger none">
+                <p>
+                    <strong class="lead">:( This browser does not support the IndexedDB API</strong>,
+                    therefore this sample will not work in this browser.
+                    When these samples were developed, Safari was the only desktop browser which
+                    didn't included support for IndexedDB.
+                </p>
+                <p>
+                    You can check out the <a href="http://caniuse.com/indexeddb" target="_blank">caniuse.com</a>
+                    page for the most recent browser support details.
+                </p>
+            </div>
+        </article>
+        <div id="result-stub" class="well hidden">
+        </div>
+        
+        <script data-step="1" data-label="Initialize &amp; Open">
+            var initDB;
+            var step1 = function() {
+                //---
+                var openRequest = window.indexedDB.open('InitDB', 1);
+
+                openRequest.onupgradeneeded = function (e) {
+
+                    $$result.log('Upgrade Needed');
+
+                    var newVersion  = e.target.result;
+
+                    if (!newVersion.objectStoreNames.contains('courses')) {
+                        newVersion.createObjectStore('courses',
+                                {
+                                    autoIncrement: true
+                                });
+                    }
+
+                };
+
+                openRequest.onerror = openRequest.onblocked = $$result.log;
+
+                openRequest.onsuccess = function (e) {
+
+                    $$result.log('Database open');
+
+                    // set aside instance of open database
+                    // declared in earlier scope
+                    initDB = e.target.result;
+
+                };
+                //---
+            }
+        </script>
+        <script data-step="2" data-label="Delete Database">
+            var step2 = function () {
+                //---
+                if (typeof initDB !== 'undefined') {
+
+                    $$result.log('Closing the database...');
+
+                    initDB.close();
+
+                    $$result.log('Attempting to delete the database...');
+
+                    var deleteRequest = indexedDB.deleteDatabase('InitDB');
+
+                    deleteRequest.onerror = deleteRequest.onblocked = $$result.log;
+
+                    deleteRequest.onsuccess = function () {
+
+                        $$result.log('Database deleted');
+
+                    };
+
+                } else {
+
+                    $$result.log('You must first create a database before attemping a delete.');
+
+                }
+                
+                //---
+            }
+        </script>
+        <script data-label="Command Object Mapping">
+            var _commands = {
+                currentStep: 0,
+                step1: step1,
+                step2: step2
+            };
+        </script>
+        <script>
+            var demoLoad = function () {
+
+                if (!window.indexedDB) {
+
+                    $('#unsupported').fadeIn();
+
+                }
+
+            };
+        </script>
+        <script data-main="../../scripts/main" src="../../scripts/require-jquery.js"></script>
+    </body>
+</html>
