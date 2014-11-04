@@ -1,10 +1,11 @@
-﻿require([
+require([
     "jquery",
     "knockout-3.0.0",
     "bootstrap",
     "underscore",
     "jsonParser",
     "layoutMaster",
+    "jquery.mockjson",
     "result",
     "modernizr-2.6.2",
     "rainbow-custom.min"], 
