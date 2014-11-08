@@ -35,7 +35,7 @@
             version: null,
             instance: {},
             defaultErrorHandler: function (e) {
-                $$result.log(e);
+                util.log(e);
             },
             setDefaultErrorHandler: function (request) {
 
@@ -66,7 +66,7 @@
                     version: null,
                     instance: {},
                     defaultErrorHandler: function (e) {
-                        $$result.log(e);
+                        util.log(e);
                     },
                     setDefaultErrorHandler: function (request) {
 
@@ -104,13 +104,13 @@
                         storeName,
                         newVersion = e.target.result;
 
-                    $$result.log('Upgrading to version: ' + newVersion.version);
+                    util.log('Upgrading to version: ' + newVersion.version);
 
                     storeName = 'Employees';
 
                     if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                        $$result.log('Creating <code>' + storeName + '</code> store');
+                        util.log('Creating <code>' + storeName + '</code> store');
 
                         var people = newVersion.createObjectStore(storeName,
                                                 {
@@ -123,7 +123,7 @@
 
                     db.instance = e.target.result;
 
-                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                    util.log('The <code>' + db.name + '</code> (version ' +
                                     db.version + ') database is open and ready.');
 
                 };
@@ -158,7 +158,7 @@
 
                     if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                        $$result.log('Creating <code>' + storeName + '</code> store');
+                        util.log('Creating <code>' + storeName + '</code> store');
 
                         var people = newVersion.createObjectStore(
                                                     storeName,
@@ -172,7 +172,7 @@
                     if (newVersion.objectStoreNames.contains(storeName)) {
                         var employeeStore = e.currentTarget.transaction.objectStore('Employees');
 
-                        $$result.log('Adding an index named <code>email</code> to the <code>Employees</code> store');
+                        util.log('Adding an index named <code>email</code> to the <code>Employees</code> store');
                         employeeStore.createIndex('email', 'email', { unique: true });
                     }
                 }
@@ -181,7 +181,7 @@
 
                     db.instance = e.target.result;
 
-                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                    util.log('The <code>' + db.name + '</code> (version ' +
                                     db.version + ') database is open and ready.');
 
                 };
@@ -211,11 +211,11 @@
                         storeName,
                         newVersion = e.target.result;
 
-                    $$result.log('Upgrading to version: ' + newVersion.version);
+                    util.log('Upgrading to version: ' + newVersion.version);
 
                     newVersion.deleteObjectStore('Widgets');
 
-                    $$result.log('Deleted <code>Widgets</code> store');
+                    util.log('Deleted <code>Widgets</code> store');
 
                 };
 
@@ -223,7 +223,7 @@
 
                     db.instance = e.target.result;
 
-                    $$result.log('The <code>' + db.name + '</code> (version ' +
+                    util.log('The <code>' + db.name + '</code> (version ' +
                                     db.version + ') database is open and ready.');
 
                 };
@@ -239,7 +239,7 @@
 
                 }
 
-                $$result.log('Attempting to delete the database...');
+                util.log('Attempting to delete the database...');
 
                 var delRequest = indexedDB.deleteDatabase(db.name);
 
@@ -249,7 +249,7 @@
 
                     db.instance = null;
 
-                    $$result.log('Database deleted');
+                    util.log('Database deleted');
 
                 };
                 //---

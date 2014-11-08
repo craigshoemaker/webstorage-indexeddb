@@ -1,4 +1,4 @@
-﻿var $$result = (function () {
+﻿(function (window) {
 
     var _result = {};
 
@@ -84,7 +84,7 @@
         _result.resetUI();
     };
 
-    return {
+    window.util = {
         resetUI: _result.resetUI,
         clear: _result.clear,
         log: _result.log,
@@ -92,4 +92,5 @@
         logRaw: _result.logRaw,
         logBold: _result.logBold
     };
-})();
+
+})(window);

@@ -58,7 +58,7 @@
 
                 openRequest.onupgradeneeded = function (e) {
 
-                    $$result.log('Upgrade Needed');
+                    util.log('Upgrade Needed');
 
                     var newVersion  = e.target.result;
 
@@ -71,11 +71,11 @@
 
                 };
 
-                openRequest.onerror = openRequest.onblocked = $$result.log;
+                openRequest.onerror = openRequest.onblocked = util.log;
 
                 openRequest.onsuccess = function (e) {
 
-                    $$result.log('Database open');
+                    util.log('Database open');
 
                     // set aside instance of open database
                     // declared in earlier scope
@@ -90,25 +90,23 @@
                 //---
                 if (typeof initDB !== 'undefined') {
 
-                    $$result.log('Closing the database...');
+                    util.log('Closing the database...');
 
                     initDB.close();
 
-                    $$result.log('Attempting to delete the database...');
+                    util.log('Attempting to delete the database...');
 
                     var deleteRequest = indexedDB.deleteDatabase('InitDB');
 
-                    deleteRequest.onerror = deleteRequest.onblocked = $$result.log;
-
                     deleteRequest.onsuccess = function () {
 
-                        $$result.log('Database deleted');
+                        util.log('Database deleted');
 
                     };
 
                 } else {
 
-                    $$result.log('You must first create a database before attemping a delete.');
+                    util.log('You must first create a database before attemping a delete.');
 
                 }
                 

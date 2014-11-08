@@ -59,7 +59,7 @@
                 }
             },
             defaultErrorHandler: function (e) {
-                $$result.log(e);
+                util.log(e);
             },
             setDefaultErrorHandler: function (request) {
 
@@ -90,7 +90,7 @@
                     version: 1,
                     instance: {},
                     defaultErrorHandler: function (e) {
-                        $$result.log(e);
+                        util.log(e);
                     },
                     setDefaultErrorHandler: function (request) {
 
@@ -122,7 +122,7 @@
 
                 if (!newVersion.objectStoreNames.contains('people')) {
 
-                    $$result.log('Creating <code>people</code> store');
+                    util.log('Creating <code>people</code> store');
 
                     var store = newVersion.createObjectStore('people', { autoIncrement: true });
 
@@ -168,7 +168,7 @@
 
                         person = result.value;
 
-                        $$result.log('[' +
+                        util.log('[' +
                             result.key + ']  ' +
                             person.firstName + ' ' +
                             person.lastName + ', ' +
@@ -187,7 +187,7 @@
                 var lastName = $('#input-box').val();
 
                 if (lastName.length === 0) {
-                    $$result.log('You need to enter a last name.')
+                    util.log('You need to enter a last name.')
                     return;
                 }
 
@@ -206,7 +206,7 @@
 
                     if (person) {
 
-                        $$result.log(person.firstName + ' ' + person.lastName);
+                        util.log(person.firstName + ' ' + person.lastName);
                     }
                 };
                 //---
@@ -227,7 +227,7 @@
                 }
 
                 if (startAge < 18) {
-                    $$result.log('You need to enter an age.')
+                    util.log('You need to enter an age.')
                     return;
                 }
 
@@ -262,7 +262,7 @@
 
                         person = result.value;
 
-                        $$result.log('[' +
+                        util.log('[' +
                             result.key + ']  ' +
                             person.firstName + ' ' +
                             person.lastName + ', ' +
@@ -281,7 +281,7 @@
                 var lastName = $('#input-box').val();
 
                 if (lastName.length === 0) {
-                    $$result.log('You need to enter a last name.')
+                    util.log('You need to enter a last name.')
                     return;
                 }
 
@@ -309,7 +309,7 @@
 
                         person = result.value;
 
-                        $$result.log('[' +
+                        util.log('[' +
                             result.key + ']  ' +
                             person.firstName + ' ' +
                             person.lastName + ', ' +
@@ -328,7 +328,7 @@
                 var lastName = $('#input-box').val();
 
                 if (lastName.length === 0) {
-                    $$result.log('You need to enter a last name.')
+                    util.log('You need to enter a last name.')
                     return;
                 }
 
@@ -358,7 +358,7 @@
 
                         person = result.value;
 
-                        $$result.log('[' +
+                        util.log('[' +
                             result.key + ']  ' +
                             person.firstName + ' ' +
                             person.lastName + ', ' +
@@ -415,7 +415,7 @@
                 var notify = function (length) {
                     counter++;
                     if (counter == length) {
-                        $$result.log(length + ' people objects are now added to the <code>people</code> store.');
+                        util.log(length + ' people objects are now added to the <code>people</code> store.');
                     }
                 };
 
@@ -440,7 +440,7 @@
 
                         db.instance.close();
 
-                        $$result.log('Attempting to delete the database...');
+                        util.log('Attempting to delete the database...');
 
                         var delRequest = indexedDB.deleteDatabase(db.name);
 
@@ -450,13 +450,13 @@
 
                             db.instance = null;
 
-                            $$result.log('Database deleted');
+                            util.log('Database deleted');
 
                         };
 
                     } else {
 
-                        $$result.log('You must first create a database before attempting a delete. Refresh the page to create the database again.');
+                        util.log('You must first create a database before attempting a delete. Refresh the page to create the database again.');
 
                     }
 
@@ -475,7 +475,7 @@
 
                         if (!newVersion.objectStoreNames.contains(db.stores.people.name)) {
 
-                            $$result.log('Creating <code>' + db.stores.people.name + '</code> store');
+                            util.log('Creating <code>' + db.stores.people.name + '</code> store');
 
                             var store = newVersion.createObjectStore(
                                 db.stores.people.name,
@@ -515,7 +515,7 @@
 
                         db.instance = e.target.result;
 
-                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+                        util.log('The <code>' + db.name + '</code> database open and ready.');
 
                     };
                 };

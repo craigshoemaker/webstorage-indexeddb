@@ -66,7 +66,7 @@
                 }
             },
             defaultErrorHandler: function (e) {
-                $$result.log(e);
+                util.log(e);
             },
             setDefaultErrorHandler: function (request) {
 
@@ -187,7 +187,7 @@
 
                 var notify = function () {
 
-                    $$result.log('10 people objects are now added to each store.');
+                    util.log('10 people objects are now added to each store.');
 
                 };
 
@@ -213,7 +213,7 @@
                         db.instance.close();
                     }
 
-                    $$result.log('Attempting to delete the database...');
+                    util.log('Attempting to delete the database...');
 
                     var delRequest = indexedDB.deleteDatabase(db.name);
 
@@ -223,7 +223,7 @@
 
                         db.instance = null;
 
-                        $$result.log('Database deleted');
+                        util.log('Database deleted');
 
                     };
 
@@ -253,7 +253,7 @@
 
                             person = result.value;
 
-                            $$result.log('[' +
+                            util.log('[' +
                                 result.key + ']  ' +
                                 person.firstName + ' ' +
                                 person.lastName + ', ' +
@@ -285,7 +285,7 @@
 
                         if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                            $$result.log('Creating <code>' + storeName + '</code> store');
+                            util.log('Creating <code>' + storeName + '</code> store');
 
                             autoKeyStore = newVersion.createObjectStore(
                                                         storeName,
@@ -301,7 +301,7 @@
 
                         if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                            $$result.log('Creating <code>' + storeName + '</code> store');
+                            util.log('Creating <code>' + storeName + '</code> store');
 
                             emailStore = newVersion.createObjectStore(
                                                         storeName,
@@ -316,7 +316,7 @@
 
                         if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                            $$result.log('Creating <code>' + storeName + '</code> store');
+                            util.log('Creating <code>' + storeName + '</code> store');
 
                             autoKeyWithPathStore = newVersion.createObjectStore(
                                                         storeName,
@@ -332,7 +332,7 @@
 
                         if (!newVersion.objectStoreNames.contains(storeName)) {
 
-                            $$result.log('Creating <code>' + storeName + '</code> store');
+                            util.log('Creating <code>' + storeName + '</code> store');
 
                             guidStore = newVersion.createObjectStore(
                                                         storeName,
@@ -353,7 +353,7 @@
 
                         db.instance = e.target.result;
 
-                        $$result.log('The <code>' + db.name + '</code> database open and ready.');
+                        util.log('The <code>' + db.name + '</code> database open and ready.');
 
                     };
                 };

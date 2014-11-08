@@ -31,7 +31,7 @@ require([
                     '</div>');
             }
 
-            $$result.resetUI();
+            util.resetUI();
 
             var
                 blocks = $('script[data-step]'),
@@ -104,10 +104,10 @@ require([
             });
 
             var runCurrentStep = function () {
-                $$result.clear();
+                util.clear();
                 var scriptBlock = $('script[data-step=' + _commands.currentStep + ']');
                 if (scriptBlock.attr('data-listingonly')) {
-                    $$result.logRaw(listingOnlyMessage);
+                    util.logRaw(listingOnlyMessage);
                 } else {
                     _commands['step' + _commands.currentStep]();
                 }
@@ -132,7 +132,7 @@ require([
 
             $('#clear-button').click(function (e) {
                 e.preventDefault();
-                $$result.clear();
+                util.clear();
                 return false;
             });
 
@@ -144,7 +144,7 @@ require([
             $('#steps a[data-step]').click(function () {
                 var step = parseInt(this.getAttribute('data-step'), 10);
                 changeStep(step);
-                $$result.clear();
+                util.clear();
                 elements.html('');
             });
 
