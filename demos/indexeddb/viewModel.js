@@ -1,6 +1,4 @@
-﻿/// <reference path="db.js"/>
-
-// todo change layout
+/// <reference path="db.js"/>
 
 (function (window, Modernizr, localDatabase, homesDBModel) {
 

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="../../img/favicon.png">
@@ -290,9 +290,9 @@
                     index = transaction.objectStore('people').index('lastName'),
                     range;
 
-                //range = IDBKeyRange.only(lastName);
+                range = IDBKeyRange.only(lastName);
                 //range = IDBKeyRange.upperBound(lastName);
-                range = IDBKeyRange.lowerBound(lastName);
+                //range = IDBKeyRange.lowerBound(lastName, true);
 
 
                 var cursorRequest = index.openCursor(range);
@@ -337,13 +337,13 @@
                     index = transaction.objectStore('people').index('lastName'),
                     range;
 
-                range = IDBKeyRange.only(lastName);
-                //range = IDBKeyRange.upperBound(lastName);
+                //range = IDBKeyRange.only(lastName);
+                range = IDBKeyRange.upperBound(lastName);
                 //range = IDBKeyRange.lowerBound(lastName);
 
-                var cursorRequest = index.openCursor(range, 'next');
+                var cursorRequest = index.openCursor(range, 'next'); // asc
                 //var cursorRequest = index.openCursor(range, 'nextunique');
-                //var cursorRequest = index.openCursor(range, 'prev');
+                //var cursorRequest = index.openCursor(range, 'prev'); // desc
                 //var cursorRequest = index.openCursor(range, 'prevunique');
 
                 db.setDefaultErrorHandler(cursorRequest);

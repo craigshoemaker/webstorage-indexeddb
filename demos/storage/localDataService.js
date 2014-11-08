@@ -1,4 +1,6 @@
-﻿var localDataService = (function () {
+(function (window) {
+    
+    'use strict';
 
     var _storage = window.localStorage;
 
@@ -60,6 +62,7 @@
 
         }
     };
+    
+    window.localDataService = _ds;
 
-    return _ds;
-})();
+})(window);

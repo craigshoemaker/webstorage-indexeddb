@@ -1,4 +1,4 @@
-﻿var layoutMaster = (function() {
+var layoutMaster = (function() {
     var lm = {
         _header: '<header class="container"><nav class="navbar navbar-default" role="navigation">' +
 '              <div class="navbar-header">' +
@@ -31,12 +31,9 @@
 '                      <li><a href="../../demos/indexeddb/02-crud.html">CRUD Operations</a></li>' +
 '                      <li><a href="../../demos/indexeddb/03-cursor.html">Cursors, Indexes &amp; Ranges</a></li>' +
 '                      <li><a href="../../demos/indexeddb/04-keys.html">Keys</a></li>' +
-'                      <li><a href="../../demos/indexeddb/05-performance.html" title="Note: This demo will attempt to load 500K objects into IndexedDB. Be prepared to wait ;)">Performance <i class="fa fa-warning"></i></a></li>' +
 '                      <li><a href="../../demos/indexeddb/06-versions.html">Versions</a></li>' +
 '                      <li class="divider"></li>' +
 '                      <li><a href="../../demos/indexeddb/07-homes.html"><i class="fa fa-laptop"></i> Homes List</a></li>' +
-'                      <li class="divider"></li>' +
-'                      <li><a href="../../demos/indexeddb/08-capacity.html">Capacity</a></li>' +
 '                    </ul>' +
 '                  </li>' +
 '                </ul>' +

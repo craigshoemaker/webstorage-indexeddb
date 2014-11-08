@@ -1,4 +1,6 @@
-﻿(function (window) {
+(function (window) {
+    
+    'use strict';
 
     var model = {
         name: 'HomesDemoDB',

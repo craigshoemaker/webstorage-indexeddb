@@ -1,4 +1,6 @@
-﻿var viewModel = (function () {
+(function (window, localDataService) {
+    
+    'use strict';
 
     var
         $msg,
@@ -138,4 +140,4 @@
         vm.init();
 
     });
-})();
+})(window, window.localDataService);
