@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="../../img/favicon.png">
@@ -239,6 +239,19 @@
         };
     </script>
     <script>
+        window.indexedDB = window.indexedDB ||
+                                   window.mozIndexedDB ||
+                                   window.webkitIndexedDB ||
+                                   window.msIndexedDB;
+
+        window.IDBTransaction = window.IDBTransaction ||
+                                window.webkitIDBTransaction ||
+                                window.msIDBTransaction;
+
+        window.IDBKeyRange = window.IDBKeyRange ||
+                             window.webkitIDBKeyRange ||
+                             window.msIDBKeyRange;
+
         var demoLoad = function () {
 
             if (!window.indexedDB) {

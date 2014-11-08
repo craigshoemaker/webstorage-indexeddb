@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
     <head>
         <link rel="icon" type="image/png" href="../../img/favicon.png">
@@ -29,9 +29,30 @@
         <div id="result-stub" class="well hidden">
         </div>
         
-        <script data-step="1" data-label="Initialize &amp; Open">
+        <script data-step="1" data-label="API Normalization"
+                data-listingonly="true"
+                title="This code normalizes the values of indexedDB, IDBTransaction and IDBKeyRage for any vendor-specific implementations. Pressing the Run button does nothing.">
+            var step1 = function () {
+                //---
+                window.indexedDB = window.indexedDB ||
+                                   window.mozIndexedDB ||
+                                   window.webkitIndexedDB ||
+                                   window.msIndexedDB;
+
+                window.IDBTransaction = window.IDBTransaction ||
+                                        window.webkitIDBTransaction ||
+                                        window.msIDBTransaction;
+
+                window.IDBKeyRange = window.IDBKeyRange ||
+                                     window.webkitIDBKeyRange ||
+                                     window.msIDBKeyRange;
+                //---
+            };
+        </script>
+
+        <script data-step="2" data-label="Initialize &amp; Open">
             var initDB;
-            var step1 = function() {
+            var step2 = function() {
                 //---
                 var openRequest = window.indexedDB.open('InitDB', 1);
 
@@ -64,8 +85,8 @@
                 //---
             }
         </script>
-        <script data-step="2" data-label="Delete Database">
-            var step2 = function () {
+        <script data-step="3" data-label="Delete Database">
+            var step3 = function () {
                 //---
                 if (typeof initDB !== 'undefined') {
 
@@ -98,10 +119,24 @@
             var _commands = {
                 currentStep: 0,
                 step1: step1,
-                step2: step2
+                step2: step2,
+                step3: step3
             };
         </script>
         <script>
+            window.indexedDB = window.indexedDB ||
+                                   window.mozIndexedDB ||
+                                   window.webkitIndexedDB ||
+                                   window.msIndexedDB;
+
+            window.IDBTransaction = window.IDBTransaction ||
+                                    window.webkitIDBTransaction ||
+                                    window.msIDBTransaction;
+
+            window.IDBKeyRange = window.IDBKeyRange ||
+                                 window.webkitIDBKeyRange ||
+                                 window.msIDBKeyRange;
+
             var demoLoad = function () {
 
                 if (!window.indexedDB) {
