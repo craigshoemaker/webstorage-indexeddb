@@ -15,11 +15,23 @@
         clientId: ko.observable(''),
         buttonLabel: ko.observable('Add'),
 
+
+
+
+
+
+
         errorHandler: function (error) {
             console.log(error);
             alert('Error');
             debugger;
         },
+
+
+
+
+
+
 
         init: function () {
 
@@ -32,6 +44,12 @@
 
         },
 
+
+
+
+
+
+
         getHome: function () {
             return {
                 address: vm.address(),
@@ -42,6 +60,12 @@
                 clientId: vm.clientId()
             };
         },
+
+
+
+
+
+
 
         save: function () {
 
@@ -69,6 +93,12 @@
             }
         },
 
+
+
+
+
+
+
         clear: function () {
             vm.address('');
             vm.city('');
@@ -80,6 +110,12 @@
             vm.buttonLabel('Add');
         },
 
+
+
+
+
+
+
         'delete': function (obj, e) {
 
             var key = e.currentTarget.getAttribute('data-id');
@@ -90,6 +126,12 @@
                 vm.clear();
             }, vm.errorHandler);
         },
+
+
+
+
+
+
 
         select: function (obj, e) {
 
@@ -117,6 +159,12 @@
 
     };
 
+
+
+
+
+
+
     $(function () {
 
         if (!Modernizr.indexeddb) {
@@ -132,6 +180,12 @@
         }
 
     });
+
+
+
+
+
+
 
     window.app = window.app || {};
     window.app.viewModel = vm;

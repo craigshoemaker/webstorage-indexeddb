@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
     <head>
         <link rel="icon" type="image/png" href="../../img/favicon.png">
@@ -20,17 +20,20 @@
         <script data-step="1" data-label="Dot Operator">
             var step1 = function() {
                 //---
+
+                // press the Run button twice
+
                 var storage = window.localStorage;
 
                 if (storage.firstName === undefined) {
 
-                    $$result.log('firstName is not in local storage');
+                    util.log('firstName is not in local storage');
 
                     storage.firstName = 'Craig';
 
                 } else {
 
-                    $$result.logBold('firstName', storage.firstName);
+                    util.logBold('firstName', storage.firstName);
 
                 }
                 //---
@@ -43,13 +46,13 @@
 
                 if (storage.getItem('lastName') === null) {
 
-                    $$result.log('lastName is not in local storage');
+                    util.log('lastName is not in local storage');
 
                     storage.setItem('lastName', 'Shoemaker');
 
                 } else {
                     
-                    $$result.logBold('lastName', storage.getItem('lastName'));
+                    util.logBold('lastName', storage.getItem('lastName'));
 
                 }
                 //---
@@ -62,13 +65,13 @@
 
                 if (storage['twitter'] === undefined) {
 
-                    $$result.log('twitter is not in local storage');
+                    util.log('twitter is not in local storage');
 
                     storage['twitter'] = '@craigshoemaker';
 
                 } else {
 
-                    $$result.logBold('twitter', storage['twitter']);
+                    util.logBold('twitter', storage['twitter']);
 
                 }
                 //---
@@ -83,11 +86,11 @@
 
                     storage.removeItem('lastName');
 
-                    $$result.log('lastName is removed');
+                    util.log('lastName is removed');
 
                 } else {
 
-                    $$result.log('lastName is not found');
+                    util.log('lastName is not found');
 
                 }
                 //---
@@ -100,30 +103,30 @@
                     storage = window.localStorage,
                     key = '';
 
-                $$result.logBold('Using key Function');
+                util.logBold('Using key Function');
 
                 for (var i = 0, len = storage.length; i < len; i++) {
 
                     key = storage.key(i);
 
-                    $$result.logBold(key, storage[key]);
+                    util.logBold(key, storage[key]);
 
                 }
 
-                $$result.hr();
+                util.hr();
 
-                $$result.logBold('Extracting with Object.keys');
+                util.logBold('Extracting with Object.keys');
 
                 // returns array of keys
                 var keys = Object.keys(storage); 
 
                 if (keys.length > 0) {
 
-                    $$result.log(keys);
+                    util.log(keys);
 
                 } else {
 
-                    $$result.log('No keys defined.');
+                    util.log('No keys defined.');
 
                 }
                 //---
@@ -134,7 +137,7 @@
                 //---
                 window.localStorage.clear();
 
-                $$result.log('All contents of local storage are destroyed.');
+                util.log('All contents of local storage are destroyed.');
                 //---
             }
         </script>

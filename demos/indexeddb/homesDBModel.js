@@ -18,6 +18,12 @@
             }
         },
 
+
+
+
+
+
+
         upgrade: function (e) {
 
             var newVersion = e.target.result;
@@ -36,6 +42,12 @@
             }
         }
     };
+
+
+
+
+
+
 
     window.app = window.app || {};
     window.app.homesDBModel = model;

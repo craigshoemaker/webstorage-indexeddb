@@ -40,6 +40,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
             }
         },
 
+
+
+
+
+
+
         open: function (databaseModel) {
 
             var deferred = Q.defer();
@@ -60,6 +66,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
             return deferred.promise;
         },
+
+
+
+
+
+
 
         deleteDatabase: function (databaseModel, success, fail) {
 
@@ -86,11 +98,23 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
         },
 
+
+
+
+
+
+
         requireOpenDB: function (objectStoreName, deferred) {
             if (db.instance === null) {
                 deferred.reject('You cannot use an object store when the database is not open. Store name: ' + objectStoreName);
             }
         },
+
+
+
+
+
+
 
         requireObjectStoreName: function (objectStoreName, deferred) {
             if (typeof (objectStoreName) === 'undefined' ||
@@ -100,6 +124,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
             }
         },
 
+
+
+
+
+
+
         getObjectStore: function (objectStoreName, mode) {
 
             var mode = mode || db.transactionTypes.readonly;
@@ -108,6 +138,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
             return store;
         },
+
+
+
+
+
+
 
         getCount: function (objectStoreName) {
 
@@ -127,6 +163,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
             return deferred.promise;
         },
+
+
+
+
+
+
 
         getAll: function (objectStoreName) {
 
@@ -155,6 +197,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
         },
 
+
+
+
+
+
+
         insert: function (objectStoreName, data, keyName) {
 
             var deferred = Q.defer();
@@ -182,6 +230,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
             return deferred.promise;
         },
 
+
+
+
+
+
+
         'delete': function (objectStoreName, key) {
 
             var deferred = Q.defer();
@@ -197,6 +251,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
             return deferred.promise;
 
         },
+
+
+
+
+
+
 
         update: function (objectStoreName, data, key) {
 
@@ -231,6 +291,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
         },
 
+
+
+
+
+
+
         getById: function (objectStoreName, key) {
 
             var deferred = Q.defer();
@@ -246,6 +312,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
             return deferred.promise;
         },
 
+
+
+
+
+
+
         clear: function (objectStoreName) {
 
             var deferred = Q.defer();
@@ -260,6 +332,12 @@ window.IDBKeyRange =    window.IDBKeyRange ||
 
             return deferred.promise;
         }
+
+
+
+
+
+
 
     };
 
