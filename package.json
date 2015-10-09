@@ -1,0 +1,29 @@
+{
+  "name": "webstorage-indexeddb",
+  "version": "1.0.0",
+  "description": "API demos for working with Web Storage and IndexedDB",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigshoemaker/webstorage-indexeddb.git"
+  },
+  "keywords": [
+    "web",
+    "storage",
+    "indexeddb",
+    "html5"
+  ],
+  "author": "Craig Shoemaker <craig@craigshoemaker.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/craigshoemaker/webstorage-indexeddb/issues"
+  },
+  "homepage": "https://github.com/craigshoemaker/webstorage-indexeddb#readme",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-webserver": "^0.9.1"
+  }
+}
