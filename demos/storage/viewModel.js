@@ -14,7 +14,8 @@
         $storageStrategyRadio,
 
         storageStrategyKey = 'storage-strategy',
-        key = 'bb89dd99-0817-4a4f-b74b-1c440831ae25';
+        key = 'bb89dd99-0817-4a4f-b74b-1c440831ae25',
+        strategy;
 
 
     $('input:radio[name=storage-strategy]').click(function () {
