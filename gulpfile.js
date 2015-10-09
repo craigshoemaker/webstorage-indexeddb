@@ -5,7 +5,9 @@ gulp.task('default', function() {
   gulp.src('./')
     .pipe(webserver({
       livereload: true,
+      port: 3001,
       directoryListing: true,
       open: true,
+      fallback: 'index.html'
     }));
 });
